@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AETHER VISION // Precision Multi-Object Spatial Network</title>
+  
+  <style>
+    :root {
+      --bg: #06080d;
+      --card-bg: rgba(15, 20, 31, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent: #00f0ff;
+      --accent-glow: rgba(0, 240, 255, 0.35);
+      --pink: #ff0055;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .bg-grid {
+      position: fixed;
+      top: 0; 
+      left: 0; 
+      width: 100vw; 
+      height: 100vh;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      z-index: 1;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    p.subtitle {
+      color: var(--text-dim);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .luxury-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .upload-box {
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .upload-box:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 25px var(--accent-glow);
+    }
+
+    .table-container {
+      max-height: 240px;
+      overflow-y: auto;
+      margin: 20px 0;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 14px;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 1px;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:hover { 
+      background: rgba(255, 255, 255, 0.03); 
+    }
+
+    tr.selected-row { 
+      background: rgba(0, 240, 255, 0.1); 
+    }
+
+    .checkbox-custom {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .image-viewport {
+      position: relative;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      margin-top: 20px;
+      display: none;
+    }
+
+    .image-viewport img { 
+      width: 100%; 
+      display: block; 
+    }
+
+    .image-viewport canvas {
+      position: absolute;
+      top: 0; 
+      left: 0;
+      width: 100%; 
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .comp-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .comp-card.highlight {
+      border-color: var(--accent);
+      background: rgba(0, 240, 255, 0.05);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .comp-val {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 8px 0;
+    }
+
+    .comp-card.highlight .comp-val { 
+      color: var(--accent); 
+    }
+    
+    .btn-action {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-action:hover { 
+      background: rgba(255, 255, 255, 0.15); 
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <div class="container">
+    <div>
+      <div class="badge-pill">Autonomous Spatial Perception</div>
+      <h1>Multi-Object Dynamic 3D Distance</h1>
+      <p class="subtitle">
+        Upload any real-world photo. The AI identifies objects across the scene, lets you pick any targets you want, and draws straight lines with clear distance measurements in real meters.
+      </p>
+    </div>
+
+    <!-- Upload Card -->
+    <div class="luxury-card">
+      <input type="file" id="imageInput" accept="image/*" style="display: none;" />
+      <div class="upload-box" id="uploadBtn">
+        <div id="uploadStatusText" style="color: var(--accent); font-size: 18px; font-weight: 600; margin-bottom: 6px;">
+          + Upload Camera Frame
+        </div>
+        <div style="color: var(--text-dim); font-size: 13px;">Click to select and process image</div>
+      </div>
+
+      <!-- Controls & Table Area -->
+      <div id="resultsArea" style="display: none; margin-top: 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h4 id="detectedCountHeader" style="color: var(--accent); font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
+            Detected Objects
+          </h4>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-action" id="selectAllBtn">Select All</button>
+            <button class="btn-action" id="clearAllBtn">Clear</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50px;">Select</th>
+                <th>Object Identifier</th>
+                <th>Category</th>
+                <th>Camera Depth (Z)</th>
+              </tr>
+            </thead>
+            <tbody id="objectsTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Image & Canvas Viewport -->
+        <div class="image-viewport" id="viewport">
+          <img id="baseImage" alt="Scene Frame" />
+          <canvas id="overlayCanvas"></canvas>
+        </div>
+
+        <!-- Distance Vectors Summary -->
+        <div id="vectorSummaryArea" style="margin-top: 24px;"></div>
+      </div>
+    </div>
+
+    <!-- Architecture & Memory Benchmark Card at Bottom -->
+    <div class="luxury-card">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div class="badge-pill">Architectural Evaluation</div>
+        <h2 style="font-size: 26px;">Single-Brain Multi-Task vs. Dual Pipeline</h2>
+        <p style="color: var(--text-dim); font-size: 14px; margin-top: 6px;">
+          Proven memory reduction by uniting object detection and depth estimation into one shared backbone.
+        </p>
+      </div>
+
+      <div class="comp-grid">
+        <div class="comp-card">
+          <div style="color: var(--text-dim); font-size: 13px;">Dual Isolated Pipelines</div>
+          <div class="comp-val">89.5 MB</div>
+          <div style="color: #ef4444; font-size: 12px;">High parameter overhead</div>
+        </div>
