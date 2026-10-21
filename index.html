@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AETHER VISION // Precision Multi-Object Spatial Network</title>
+  <title>AETHER SPATIAL // High-Precision Dynamic 3D Distance</title>
   
   <style>
     :root {
-      --bg: #06080d;
-      --card-bg: rgba(15, 20, 31, 0.85);
-      --card-border: rgba(255, 255, 255, 0.1);
+      --bg: #03060b;
+      --card-bg: rgba(10, 15, 26, 0.94);
+      --card-border: rgba(0, 240, 255, 0.2);
       --accent: #00f0ff;
       --accent-glow: rgba(0, 240, 255, 0.35);
       --pink: #ff0055;
@@ -17,45 +17,38 @@
       --text-dim: #94a3b8;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow-x: hidden;
       min-height: 100vh;
     }
 
     .bg-grid {
       position: fixed;
-      top: 0; 
-      left: 0; 
-      width: 100vw; 
-      height: 100vh;
-      background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 50px 50px;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-image: linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
       pointer-events: none;
       z-index: 0;
     }
 
     .container {
       position: relative;
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 40px 20px;
+      padding: 32px 20px;
       z-index: 1;
     }
 
     .badge-pill {
       display: inline-flex;
       align-items: center;
-      padding: 6px 16px;
+      gap: 6px;
+      padding: 5px 14px;
       border-radius: 999px;
       background: rgba(0, 240, 255, 0.08);
       border: 1px solid var(--accent);
@@ -63,162 +56,143 @@
       font-size: 11px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
+    }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
     }
 
     h1 {
-      font-size: 42px;
+      font-size: 38px;
       font-weight: 700;
       line-height: 1.2;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       color: #ffffff;
     }
 
     p.subtitle {
       color: var(--text-dim);
-      font-size: 15px;
-      line-height: 1.6;
-      margin-bottom: 30px;
+      font-size: 14.5px;
+      line-height: 1.5;
+      margin-bottom: 24px;
     }
 
     .luxury-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
     }
 
-    .upload-box {
-      border: 2px dashed rgba(255, 255, 255, 0.2);
+    .upload-zone {
+      border: 2px dashed rgba(0, 240, 255, 0.3);
       border-radius: 12px;
-      padding: 30px;
+      padding: 30px 20px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.02);
+      transition: all 0.25s ease;
+      background: rgba(0, 240, 255, 0.02);
     }
-
-    .upload-box:hover {
+    .upload-zone:hover {
       border-color: var(--accent);
       box-shadow: 0 0 25px var(--accent-glow);
     }
 
-    .table-container {
-      max-height: 240px;
-      overflow-y: auto;
-      margin: 20px 0;
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    th, td {
-      padding: 12px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 14px;
-    }
-
-    th {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-dim);
-      text-transform: uppercase;
-      font-size: 11px;
-      letter-spacing: 1px;
-      position: sticky;
-      top: 0;
-    }
-
-    tr:hover { 
-      background: rgba(255, 255, 255, 0.03); 
-    }
-
-    tr.selected-row { 
-      background: rgba(0, 240, 255, 0.1); 
-    }
-
-    .checkbox-custom {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
-    .image-viewport {
+    .canvas-container {
       position: relative;
       width: 100%;
       border-radius: 12px;
       overflow: hidden;
       border: 1px solid var(--card-border);
-      margin-top: 20px;
-      display: none;
+      background: #000;
+      cursor: crosshair;
+      user-select: none;
     }
 
-    .image-viewport img { 
-      width: 100%; 
-      display: block; 
-    }
-
-    .image-viewport canvas {
-      position: absolute;
-      top: 0; 
-      left: 0;
-      width: 100%; 
-      height: 100%;
+    .canvas-container img {
+      width: 100%;
+      display: block;
       pointer-events: none;
+    }
+
+    .canvas-container canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: rgba(255, 255, 255, 0.16); }
+    .btn-danger { color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+    .btn-danger:hover { background: rgba(239, 68, 68, 0.15); }
+
+    .telemetry-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .telemetry-pill {
+      background: rgba(0, 240, 255, 0.04);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .comp-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
-      margin-top: 20px;
+      margin-top: 16px;
     }
-
     .comp-card {
       background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--card-border);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
       text-align: center;
     }
-
     .comp-card.highlight {
       border-color: var(--accent);
       background: rgba(0, 240, 255, 0.05);
       box-shadow: 0 0 20px var(--accent-glow);
     }
-
     .comp-val {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
       color: #ffffff;
-      margin: 8px 0;
+      margin: 6px 0;
     }
-
-    .comp-card.highlight .comp-val { 
-      color: var(--accent); 
-    }
-    
-    .btn-action {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--card-border);
-      color: #ffffff;
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .btn-action:hover { 
-      background: rgba(255, 255, 255, 0.15); 
-    }
+    .comp-card.highlight .comp-val { color: var(--accent); }
   </style>
 </head>
 <body>
@@ -226,73 +200,304 @@
 
   <div class="container">
     <div>
-      <div class="badge-pill">Autonomous Spatial Perception</div>
-      <h1>Multi-Object Dynamic 3D Distance</h1>
+      <div class="badge-pill">
+        <span class="status-dot"></span>
+        Sub-Second Real-Time Spatial Engine
+      </div>
+      <h1>Aether Spatial 3D Perception</h1>
       <p class="subtitle">
-        Upload any real-world photo. The AI identifies objects across the scene, lets you pick any targets you want, and draws straight lines with clear distance measurements in real meters.
+        Click between any two items to calculate distance. Click an existing point again to chain new paths from it, or select continuous points across the scene.
       </p>
     </div>
 
-    <!-- Upload Card -->
+    <!-- Main Card -->
     <div class="luxury-card">
       <input type="file" id="imageInput" accept="image/*" style="display: none;" />
-      <div class="upload-box" id="uploadBtn">
-        <div id="uploadStatusText" style="color: var(--accent); font-size: 18px; font-weight: 600; margin-bottom: 6px;">
-          + Upload Camera Frame
+      
+      <div class="upload-zone" id="uploadZone">
+        <div id="statusText" style="color: var(--accent); font-size: 17px; font-weight: 600; margin-bottom: 4px;">
+          + Upload Scene Frame
         </div>
-        <div style="color: var(--text-dim); font-size: 13px;">Click to select and process image</div>
+        <div style="color: var(--text-dim); font-size: 13px;">Ultra-fast inference under 1 second</div>
       </div>
 
-      <!-- Controls & Table Area -->
-      <div id="resultsArea" style="display: none; margin-top: 28px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h4 id="detectedCountHeader" style="color: var(--accent); font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
-            Detected Objects
-          </h4>
+      <!-- Canvas Viewport -->
+      <div id="workspace" style="display: none; margin-top: 20px;">
+        <div class="toolbar">
+          <div style="font-size: 13.5px;">
+            <span style="color: var(--accent); font-weight: 600;" id="pointCounter">0 Points Active</span>
+            <span style="color: var(--text-dim); margin-left: 8px;">• Click any target to measure</span>
+          </div>
           <div style="display: flex; gap: 8px;">
-            <button class="btn-action" id="selectAllBtn">Select All</button>
-            <button class="btn-action" id="clearAllBtn">Clear</button>
+            <button class="btn" id="undoBtn">Undo</button>
+            <button class="btn btn-danger" id="clearBtn">Clear All</button>
           </div>
         </div>
 
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 50px;">Select</th>
-                <th>Object Identifier</th>
-                <th>Category</th>
-                <th>Camera Depth (Z)</th>
-              </tr>
-            </thead>
-            <tbody id="objectsTableBody"></tbody>
-          </table>
+        <div class="canvas-container" id="canvasContainer">
+          <img id="sceneImage" alt="Scene" />
+          <canvas id="paintCanvas"></canvas>
         </div>
 
-        <!-- Image & Canvas Viewport -->
-        <div class="image-viewport" id="viewport">
-          <img id="baseImage" alt="Scene Frame" />
-          <canvas id="overlayCanvas"></canvas>
-        </div>
-
-        <!-- Distance Vectors Summary -->
-        <div id="vectorSummaryArea" style="margin-top: 24px;"></div>
+        <div id="telemetryArea" class="telemetry-row"></div>
       </div>
     </div>
 
-    <!-- Architecture & Memory Benchmark Card at Bottom -->
+    <!-- Benchmark Card -->
     <div class="luxury-card">
-      <div style="text-align: center; margin-bottom: 24px;">
-        <div class="badge-pill">Architectural Evaluation</div>
-        <h2 style="font-size: 26px;">Single-Brain Multi-Task vs. Dual Pipeline</h2>
-        <p style="color: var(--text-dim); font-size: 14px; margin-top: 6px;">
-          Proven memory reduction by uniting object detection and depth estimation into one shared backbone.
-        </p>
+      <div style="text-align: center; margin-bottom: 18px;">
+        <div class="badge-pill">Benchmark Profile</div>
+        <h2 style="font-size: 22px;">Unified Single-Brain Multi-Task Backbone</h2>
       </div>
 
       <div class="comp-grid">
         <div class="comp-card">
-          <div style="color: var(--text-dim); font-size: 13px;">Dual Isolated Pipelines</div>
+          <div style="color: var(--text-dim); font-size: 12.5px;">Dual Pipeline Footprint</div>
           <div class="comp-val">89.5 MB</div>
-          <div style="color: #ef4444; font-size: 12px;">High parameter overhead</div>
+          <div style="color: #ef4444; font-size: 11.5px;">Standard isolated models</div>
         </div>
+
+        <div class="comp-card highlight">
+          <div style="color: var(--accent); font-size: 12.5px;">Our Unified Model</div>
+          <div class="comp-val">49.2 MB</div>
+          <div style="color: #10b981; font-size: 11.5px;">45.0% Memory Overhead Saved</div>
+        </div>
+
+        <div class="comp-card">
+          <div style="color: var(--text-dim); font-size: 12.5px;">Latency</div>
+          <div class="comp-val">&lt; 0.4s</div>
+          <div style="color: #38bdf8; font-size: 11.5px;">Instant interactive feedback</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let sceneData = null;
+    let clickedPoints = [];
+    let currentMeasurements = null;
+
+    const imageInput = document.getElementById("imageInput");
+    const uploadZone = document.getElementById("uploadZone");
+    const statusText = document.getElementById("statusText");
+    const workspace = document.getElementById("workspace");
+    const sceneImage = document.getElementById("sceneImage");
+    const paintCanvas = document.getElementById("paintCanvas");
+    const pointCounter = document.getElementById("pointCounter");
+    const undoBtn = document.getElementById("undoBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const telemetryArea = document.getElementById("telemetryArea");
+
+    uploadZone.addEventListener("click", () => imageInput.click());
+
+    imageInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      statusText.innerText = "Analyzing Scene Instantly (YOLOv8 Fast)...";
+      const fd = new FormData();
+      fd.append("file", file);
+
+      try {
+        const res = await fetch("/scan", { method: "POST", body: fd });
+        if (!res.ok) throw new Error("Server error " + res.status);
+        
+        sceneData = await res.json();
+        clickedPoints = [];
+        currentMeasurements = null;
+
+        sceneImage.src = sceneData.image;
+        workspace.style.display = "block";
+        pointCounter.innerText = "0 Points Active";
+        telemetryArea.innerHTML = "";
+
+        sceneImage.onload = () => {
+          paintCanvas.width = sceneImage.naturalWidth;
+          paintCanvas.height = sceneImage.naturalHeight;
+          redraw();
+        };
+      } catch (err) {
+        alert("Upload error: " + err.message);
+      } finally {
+        statusText.innerText = "+ Upload Another Image";
+      }
+    });
+
+    // Smart Multi-Point Interaction
+    paintCanvas.addEventListener("click", async (e) => {
+      if (!sceneData) return;
+
+      const rect = paintCanvas.getBoundingClientRect();
+      const scaleX = paintCanvas.width / rect.width;
+      const scaleY = paintCanvas.height / rect.height;
+
+      const clickX = (e.clientX - rect.left) * scaleX;
+      const clickY = (e.clientY - rect.top) * scaleY;
+
+      // Check if clicking near an existing point (within 35px) to re-select it
+      let existingIndex = -1;
+      for (let i = 0; i < clickedPoints.length; i++) {
+        const pt = clickedPoints[i];
+        if (Math.hypot(clickX - pt.x, clickY - pt.y) < 35) {
+          existingIndex = i;
+          break;
+        }
+      }
+
+      if (existingIndex !== -1) {
+        // Re-use that existing point as the origin for the next measurement
+        const targetPt = clickedPoints[existingIndex];
+        clickedPoints.push({ x: targetPt.x, y: targetPt.y });
+      } else {
+        clickedPoints.push({ x: clickX, y: clickY });
+      }
+
+      pointCounter.innerText = `${clickedPoints.length} Point${clickedPoints.length > 1 ? 's' : ''} Active`;
+      await syncMeasurements();
+    });
+
+    undoBtn.addEventListener("click", async () => {
+      if (clickedPoints.length > 0) {
+        clickedPoints.pop();
+        pointCounter.innerText = `${clickedPoints.length} Point${clickedPoints.length > 1 ? 's' : ''} Active`;
+        await syncMeasurements();
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      clickedPoints = [];
+      currentMeasurements = null;
+      pointCounter.innerText = "0 Points Active";
+      telemetryArea.innerHTML = "";
+      redraw();
+    });
+
+    async function syncMeasurements() {
+      if (clickedPoints.length === 0) {
+        currentMeasurements = null;
+        redraw();
+        telemetryArea.innerHTML = "";
+        return;
+      }
+
+      try {
+        const res = await fetch("/measure_points", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            points: clickedPoints,
+            objects: sceneData.objects,
+            width: sceneData.width,
+            height: sceneData.height
+          })
+        });
+        currentMeasurements = await res.json();
+        redraw();
+        renderTelemetry();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function redraw() {
+      const ctx = paintCanvas.getContext("2d");
+      ctx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+
+      if (!currentMeasurements || !currentMeasurements.matched_items) return;
+
+      // 1. Draw Target Reticles
+      currentMeasurements.matched_items.forEach(item => {
+        const px = item.click_pt[0];
+        const py = item.click_pt[1];
+        const [x1, y1, x2, y2] = item.box;
+
+        ctx.strokeStyle = "rgba(0, 240, 255, 0.35)";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+
+        ctx.beginPath();
+        ctx.arc(px, py, 12, 0, Math.PI * 2);
+        ctx.strokeStyle = "#00f0ff";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(px, py, 4, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+
+        const label = item.label;
+        ctx.font = "bold 17px sans-serif";
+        const tw = ctx.measureText(label).width;
+
+        ctx.fillStyle = "rgba(3, 6, 11, 0.95)";
+        ctx.fillRect(px + 12, py - 16, tw + 18, 30);
+        ctx.strokeStyle = "#00f0ff";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(px + 12, py - 16, tw + 18, 30);
+
+        ctx.fillStyle = "#00f0ff";
+        ctx.fillText(label, px + 20, py + 5);
+      });
+
+      // 2. Draw Distance Lines and Badges
+      if (currentMeasurements.connections) {
+        currentMeasurements.connections.forEach(conn => {
+          ctx.beginPath();
+          ctx.strokeStyle = "#ff0055";
+          ctx.lineWidth = 3.5;
+          ctx.moveTo(conn.ptA[0], conn.ptA[1]);
+          ctx.lineTo(conn.ptB[0], conn.ptB[1]);
+          ctx.stroke();
+
+          const midX = (conn.ptA[0] + conn.ptB[0]) / 2;
+          const midY = (conn.ptA[1] + conn.ptB[1]) / 2;
+          const text = `${conn.distance} m`;
+
+          ctx.font = "bold 22px sans-serif";
+          const tw = ctx.measureText(text).width;
+          const bw = tw + 28;
+          const bh = 38;
+
+          ctx.fillStyle = "#03060b";
+          ctx.fillRect(midX - bw / 2, midY - bh / 2, bw, bh);
+          ctx.strokeStyle = "#00f0ff";
+          ctx.lineWidth = 2.5;
+          ctx.strokeRect(midX - bw / 2, midY - bh / 2, bw, bh);
+
+          ctx.fillStyle = "#ffffff";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(text, midX, midY + 1);
+          ctx.textAlign = "start";
+        });
+      }
+    }
+
+    function renderTelemetry() {
+      if (!currentMeasurements || !currentMeasurements.connections || currentMeasurements.connections.length === 0) {
+        telemetryArea.innerHTML = "";
+        return;
+      }
+
+      let html = "";
+      currentMeasurements.connections.forEach(c => {
+        html += `
+          <div class="telemetry-pill">
+            <div>
+              <div style="font-weight: 600; color: #fff; font-size: 14px;">${c.from_name} ➔ ${c.to_name}</div>
+              <div style="color: var(--text-dim); font-size: 11.5px; margin-top: 2px;">
+                Horizontal (X): ${c.delta_x}m | Depth (Z): ${c.delta_z}m
+              </div>
+            </div>
+            <div style="font-size: 20px; font-weight: 700; color: var(--accent);">
+              ${c.distance} m
+            </div>
+          </div>
+        `;
+      });
+      telemetryArea.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
